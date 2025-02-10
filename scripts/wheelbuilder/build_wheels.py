@@ -108,13 +108,17 @@ def build_wheels(pip):
     packages_selected = [s for s in os.environ.get("PACKAGES_TO_BUILD", "").split(",") if s]
     print("!!!!!!!!!!! packages_selected", packages_selected, flush=True)
     packages_to_build = set()
-    with open(join(dirname(__file__), "packages.txt")) as f:
-        for line in f.readlines():
-            line = line.strip()
-            name, version = line.split("==")
-            if not packages_selected or name in packages_selected or line in packages_selected:
-                packages_to_build.add(line)
-    print("Building wheels for", packages_to_build, flush=True)
+    
+    if not packages_selected:
+        with open(join(dirname(__file__), "packages.txt")) as f:
+            for line in f.readlines():
+                line = line.strip()
+                name, version = line.split("==")
+                if not packages_selected or name in packages_selected or line in packages_selected:
+                    packages_to_build.add(line)
+    else:
+        packages_to_build = packages_selected
+    print("!!!!!!!! Building wheels for", packages_to_build, flush=True)
     scriptdir = abspath(join(dirname(__file__), sys.platform))
     if sys.platform == "win32":
         script_ext = "bat"
