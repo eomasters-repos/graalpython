@@ -19,6 +19,8 @@ This project is meant to be a place for the community to collect build recipes f
    See [the platform subfolders](../../../../blob/master/scripts/wheelbuilder/) for which packages have buildscripts.
 
    ![](guide02.png)
+   As download URL use the archive from the [release](https://github.com/oracle/graalpython/releases) page matching your
+   graalpy version and your platform.
 
 ## How to contribute
 
