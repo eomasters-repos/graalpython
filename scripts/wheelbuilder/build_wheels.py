@@ -148,24 +148,31 @@ def build_wheels(pip):
 
 def repair_wheels():
     if sys.platform == "win32":
-        ensure_installed("delvewheel")
-        env = os.environ.copy()
-        env["PYTHONUTF8"] = "1"
-        subprocess.check_call(
-            [
-                sys.executable,
-                "-m",
-                "delvewheel",
-                "repair",
-                "-v",
-                "--exclude",
-                "python-native.dll",
-                "-w",
-                "wheelhouse",
-                *glob("*.whl"),
-            ],
-            env=env,
-        )
+        wheels = glob(join("wheelhouse", "*.whl"))
+        if not wheels:
+            print("No wheels found to repair.")
+            return
+
+        for wheel in wheels:
+            subprocess.check_call(["auditwheel", "repair", wheel, "-w", "wheelhouse/"])
+        # ensure_installed("delvewheel")
+        # env = os.environ.copy()
+        # env["PYTHONUTF8"] = "1"
+        # subprocess.check_call(
+        #     [
+        #         sys.executable,
+        #         "-m",
+        #         "delvewheel",
+        #         "repair",
+        #         "-v",
+        #         "--exclude",
+        #         "python-native.dll",
+        #         "-w",
+        #         "wheelhouse",
+        #         *glob("*.whl"),
+        #     ],
+        #     env=env,
+        # )
     elif sys.platform == "linux":
         ensure_installed("auditwheel")
         subprocess.check_call(
