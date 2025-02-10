@@ -104,7 +104,9 @@ def create_venv():
 
 
 def build_wheels(pip):
+    print("!!!!!!!!! PACKAGES_TO_BUILD= ", os.environ.get("PACKAGES_TO_BUILD", ""))
     packages_selected = [s for s in os.environ.get("PACKAGES_TO_BUILD", "").split(",") if s]
+    print("!!!!!!!!!!! packages_selected", packages_selected, flush=True)
     packages_to_build = set()
     with open(join(dirname(__file__), "packages.txt")) as f:
         for line in f.readlines():
