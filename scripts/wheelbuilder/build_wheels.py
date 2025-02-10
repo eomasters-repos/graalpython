@@ -147,7 +147,9 @@ def build_wheels(pip):
 
 
 def repair_wheels():
+    print("Repairing wheels")
     if sys.platform == "win32":
+        print("This is my special output!!!!!!!!!!!!!!!!!!!!!")
         wheels = glob(join("wheelhouse", "*.whl"))
         if not wheels:
             print("No wheels found to repair.")
