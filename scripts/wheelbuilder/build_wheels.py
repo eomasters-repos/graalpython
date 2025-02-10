@@ -112,6 +112,7 @@ def build_wheels(pip):
             name, version = line.split("==")
             if not packages_selected or name in packages_selected or line in packages_selected:
                 packages_to_build.add(line)
+    print("Building wheels for", packages_to_build, flush=True)
     scriptdir = abspath(join(dirname(__file__), sys.platform))
     if sys.platform == "win32":
         script_ext = "bat"
@@ -198,4 +199,4 @@ if __name__ == "__main__":
     extract(outpath)
     pip = create_venv()
     build_wheels(pip)
-    repair_wheels()
+    # repair_wheels()
