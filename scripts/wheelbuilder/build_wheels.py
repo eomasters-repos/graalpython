@@ -116,6 +116,10 @@ def build_wheels(pip):
     if not packages_to_build:
         print("Building wheels failed, no packages selected", flush=True)
         return
+    else:
+        print("Building wheels:")
+        for pkg in packages_to_build:
+            print("\t", pkg)
 
     if sys.platform == "win32":
         script_ext = "bat"
