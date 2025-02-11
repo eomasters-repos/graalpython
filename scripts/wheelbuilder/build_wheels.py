@@ -104,22 +104,19 @@ def create_venv():
 
 
 def build_wheels(pip):
-    print("!!!!!!!!! PACKAGES_TO_BUILD= ", os.environ.get("PACKAGES_TO_BUILD", ""))
     packages_selected = [s for s in os.environ.get("PACKAGES_TO_BUILD", "").split(",") if s]
-    print("!!!!!!!!!!! packages_selected", packages_selected, flush=True)
     packages_to_build = set()
-    
-    if not packages_selected:
-        with open(join(dirname(__file__), "packages.txt")) as f:
-            for line in f.readlines():
-                line = line.strip()
-                name, version = line.split("==")
-                if not packages_selected or name in packages_selected or line in packages_selected:
-                    packages_to_build.add(line)
-    else:
-        packages_to_build = packages_selected
-    print("!!!!!!!! Building wheels for", packages_to_build, flush=True)
     scriptdir = abspath(join(dirname(__file__), sys.platform))
+    with open(join(scriptdir, "packages.txt")) as f: # packages specific for the platform
+        for line in f.readlines():
+            line = line.strip()
+            name, version = line.split("==")
+            if not packages_selected or name in packages_selected or line in packages_selected:
+                packages_to_build.add(line)
+    if not packages_to_build:
+        print("Building wheels failed, no packages selected", flush=True)
+        return
+
     if sys.platform == "win32":
         script_ext = "bat"
     else:
@@ -154,34 +151,25 @@ def build_wheels(pip):
 
 
 def repair_wheels():
-    print("Repairing wheels")
     if sys.platform == "win32":
-        print("This is my special output!!!!!!!!!!!!!!!!!!!!!")
-        wheels = glob(join("wheelhouse", "*.whl"))
-        if not wheels:
-            print("No wheels found to repair.")
-            return
-
-        for wheel in wheels:
-            subprocess.check_call(["auditwheel", "repair", wheel, "-w", "wheelhouse/"])
-        # ensure_installed("delvewheel")
-        # env = os.environ.copy()
-        # env["PYTHONUTF8"] = "1"
-        # subprocess.check_call(
-        #     [
-        #         sys.executable,
-        #         "-m",
-        #         "delvewheel",
-        #         "repair",
-        #         "-v",
-        #         "--exclude",
-        #         "python-native.dll",
-        #         "-w",
-        #         "wheelhouse",
-        #         *glob("*.whl"),
-        #     ],
-        #     env=env,
-        # )
+        ensure_installed("delvewheel")
+        env = os.environ.copy()
+        env["PYTHONUTF8"] = "1"
+        subprocess.check_call(
+            [
+                sys.executable,
+                "-m",
+                "delvewheel",
+                "repair",
+                "-v",
+                "--exclude",
+                "python-native.dll",
+                "-w",
+                "wheelhouse",
+                *glob("*.whl"),
+            ],
+            env=env,
+        )
     elif sys.platform == "linux":
         ensure_installed("auditwheel")
         subprocess.check_call(
@@ -205,4 +193,4 @@ if __name__ == "__main__":
     extract(outpath)
     pip = create_venv()
     build_wheels(pip)
-    # repair_wheels()
+    repair_wheels()

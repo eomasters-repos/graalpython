@@ -20,8 +20,9 @@ that can then be built individually or in CI/CD systems like GitHub Actions.
    ![](guide01.png)
 
 4. Click on "Run workflow".
-   You can enter a package name or build all packages.
-   See [the platform subfolders](../../../../blob/master/scripts/wheelbuilder/) for which packages have buildscripts.
+   You can enter a comma separated list of package names or build all packages.
+   See [the platform subfolders](../../../../blob/master/scripts/wheelbuilder/) for which package are defined in the
+   `packages.txt` files.
 
    ![](guide02.png)
    As download URL use the archive from the [release](https://github.com/oracle/graalpython/releases) page matching your
