@@ -42,9 +42,9 @@ REM Install the necessary dependencies
 python -m pip install --upgrade pip
 python -m pip install numpy
 
-REM Build the wheel for NumPy
-if "%1"=="" (
-    python -m pip wheel numpy
-) else (
-    python -m pip wheel "numpy==%1"
-)
+@REM REM Build the wheel for NumPy
+@REM if "%1"=="" (
+@REM     python -m pip wheel numpy
+@REM ) else (
+@REM     python -m pip wheel "numpy==%1"
+@REM )
